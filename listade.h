@@ -3,28 +3,28 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "pilha.h"
 
 typedef int tp_item;
 
-//dados estruturado que representa o descritor
+//dados estruturados quee representam os nós da lista
 typedef struct tp_no_aux{
-	tp_item info;
+	tp_itemp info;
+	tp_item marcador;
 	struct tp_no_aux *ant;
 	struct tp_no_aux *prox;
 }tp_no;
 
-//dado estruturado que representa o nó da lista
+//dado estruturado que representa o descritor da lista
 typedef struct{
 	tp_no *ini;
-	tp_no *fim;
-	//int tamanho;
+	tp_no *fim;	
 }tp_listade;
 
 tp_listade *inicializa_listade(){
 	tp_listade *lista=(tp_listade *) malloc(sizeof(tp_listade));
 	lista->ini = NULL;
-	lista->fim = NULL;
-	//lista->tamanho=0;
+	lista->fim = NULL;	
 	return lista;
 }
 
@@ -40,12 +40,58 @@ int listade_vazia(tp_listade *lista){
 	return 0;
 }
 
-int insere_listade_no_fim(tp_listade *lista, tp_item e){
-	tp_no *novo;
-	novo=aloca();
-	if(!novo) return 0;
-	novo->info = e;
-	if(lista->ini == NULL){
+//Função para inserir os elementos na lista de forma ordenada
+int insere_listade_ordenado(tp_listade *lista, tp_itemp e, tp_item m){	
+	tp_no *novo, *atu;	
+	novo=aloca();	
+	if(!novo) return 0;		
+	novo->info.num1 = e.num1;
+	novo->info.num2 = e.num2;
+	novo->marcador = m;
+	atu = lista->ini;
+	while(atu != NULL && atu->marcador != m){
+		atu = atu->prox;
+	}
+	while(atu != NULL && atu->marcador == m && (atu->info.num1 + atu->info.num2 < novo->info.num1 + novo->info.num2)){
+		atu = atu->prox;
+	}		
+	if(lista->ini == NULL){		
+		novo->prox = NULL;
+		novo->ant = NULL;
+		lista->ini = lista->fim = novo;
+	}
+	else{
+		if(atu == NULL){		
+		novo->prox = NULL;
+		novo->ant = lista->fim;
+		lista->fim->prox = novo;
+		lista->fim = novo;}
+		else{
+			if(atu == lista->ini){
+				novo->prox = lista->ini;
+				novo->ant = NULL;
+				lista->ini->ant = novo;
+				lista->ini = novo;
+			}
+			else{
+				novo->prox = atu;
+				novo->ant = atu->ant;				
+				atu->ant->prox = novo;
+				atu->ant = novo;				
+			}
+		}
+	}	
+	return 1;
+}
+
+int insere_listade_no_fim(tp_listade *lista, tp_itemp e, tp_item m){	
+	tp_no *novo;	
+	novo=aloca();	
+	if(!novo) return 0;		
+	novo->info.num1 = e.num1;
+	novo->info.num2 = e.num2;
+	novo->marcador = m;		
+	if(lista->ini == NULL){		
 		novo->prox = NULL;
 		novo->ant = NULL;
 		lista->ini = lista->fim = novo;
@@ -55,18 +101,82 @@ int insere_listade_no_fim(tp_listade *lista, tp_item e){
 		novo->ant = lista->fim;
 		lista->fim->prox = novo;
 		lista->fim = novo;
-	}
-	//lista->tamanho++;
+	}	
 	return 1;
 }
 
-int remove_listade(tp_listade *lista, tp_item e){
-	tp_no *atu;
-	atu = lista->ini;
-	while((atu != NULL)&&(atu->info != e)){
-		atu = atu->prox;}
-	if(atu == NULL) return 0;
-	if(lista->ini == lista->fim){
+int insere_listade_no_inicio(tp_listade *lista, tp_itemp e, tp_item m){
+	tp_no *novo;
+	novo=aloca();
+	if(!novo) return 0;
+	novo->info.num1 = e.num1;
+	novo->info.num2 = e.num2;
+	novo->marcador = m;
+	if(lista->ini == NULL){
+		novo->prox = NULL;
+		novo->ant = NULL;
+		lista->ini = lista->fim = novo;		
+	}
+	else{
+		novo->prox = lista->ini;
+		novo->ant = NULL;		
+		lista->ini->ant = novo;		
+		lista->ini = novo;		
+	}
+}
+
+int remove_listade(tp_listade *lista, tp_itemp *e, tp_item *m, int caso, int posi){
+	if(listade_vazia(lista)) return 0;
+	int condicao = 0;
+	tp_itemp menor, reserva;	
+	tp_no *atu, *aux;
+	atu = lista->ini;	
+	menor = atu->info;
+	reserva.num1 = reserva.num2 = 0;
+	switch(caso){
+		case 0:
+			while((atu != NULL)&&(atu->info.num1 != e->num1 || atu->info.num2 != e->num2)){
+			atu = atu->prox;
+			}
+			break;
+		case 1:
+			while(atu != NULL && (atu->info.num1 != 6 || atu->info.num2 != 6)){			
+			if(atu->info.num1 == atu->info.num2){
+				if(condicao == 0 || atu->info.num1 > reserva.num1){					
+					reserva=atu->info;
+					condicao = 1;
+					aux = atu;					
+				}											
+			}
+			if((atu->info.num1 + atu->info.num2)<(menor.num1 + menor.num2) && condicao != 1){
+				menor = atu->info;
+				aux = atu;
+			}		
+			atu = atu->prox;					
+			}
+			break;
+		case 2:
+			break;
+		default : printf("codigo invalido");
+	}
+			
+	if(atu == NULL){		
+		if(reserva.num1 == 0 && condicao == 0){
+			*e = menor;
+			*m = aux->marcador;
+		}
+		else{
+			*e = reserva;
+			*m = aux->marcador;
+		}				
+		atu = aux;
+	} 
+	else{
+	*e=atu->info;
+	*m=atu->marcador;
+	}
+	
+	if(lista->ini == lista->fim){		
 		lista->ini = lista->fim = NULL;}
 	else{
 		if(lista->ini == atu){
@@ -83,46 +193,123 @@ int remove_listade(tp_listade *lista, tp_item e){
 				atu->ant->prox = atu->prox;
 			}
 		}
-	}
+	}	
 	free(atu);
 	atu=NULL;
+	aux=NULL;
 	//lista->tamanho--;
 	return 1;
 }
 
-void imprime_listade(tp_listade *lista, int ordem){
-	tp_no *atu;
+void imprime_listade(tp_listade *lista, tp_listade *lista2, int ordem, int turno){
+	int cont=1;
+	tp_itemp mesaini, mesafim;	
+	tp_no *atu;	
 	switch(ordem){
 		case 1: atu = lista->ini;
 			while(atu != NULL){
-				printf("%d\n", atu->info);
+				printf("%d-%d/%d | ", atu->marcador, atu->info.num1, atu->info.num2);
 				atu = atu->prox;
+			}			
+			break;
+		case 2: atu = lista->ini;
+			mesaini.num1 = lista2->ini->info.num1;
+			mesaini.num2 = lista2->ini->info.num2;
+			mesafim.num1 = lista2->fim->info.num1;
+			mesafim.num2 = lista2->fim->info.num2;
+			while(atu->marcador != turno){
+				atu=atu->prox;
+			}			
+			while(atu != NULL && atu->marcador == turno){
+				if(atu->info.num1 == mesaini.num1 || atu->info.num1 == mesaini.num2 || atu->info.num2 == mesafim.num1 || atu->info.num2 == mesafim.num2)				
+					printf("Joga - ");		
+									
+				else
+					printf("Não joga - ");					
+				printf("%d-%d/%d\n", cont, atu->info.num1, atu->info.num2);
+				atu = atu->prox;
+				cont++;
 			}
 			break;
-		case 2: atu = lista->fim;
+		/*case 3: atu = lista->ini;
+			while(atu->marcador != turno){
+				atu=atu->prox;
+			}
 			while(atu != NULL){
-				printf("%d\n", atu->info);
+				printf("%d-%d/%d\n", atu->marcador, atu->info.num1, atu->info.num2);
 				atu = atu->ant;
 			}
-			break;
+			break;*/
 		default : printf("codigo invalido");
 	}
 	printf("\n");
 }
 
-tp_no *busca_listade(tp_listade *lista, tp_item e){
+int compara_pedras(tp_item m_ini, tp_item m_fim, tp_itemp mesaini, tp_itemp mesafim, tp_itemp pedra){
+	if(m_ini == 0 || m_ini == 1 || m_fim == 0 || m_fim == 1){		
+		if((pedra.num1 == mesaini.num1 || pedra.num2 == mesaini.num1) || (pedra.num1 == mesafim.num1 || pedra.num2 == mesafim.num1)){
+			return 1;
+		}
+	}
+	if(m_ini == 2 || m_fim == 2){
+		if((pedra.num1 == mesaini.num2 || pedra.num2 == mesaini.num2) || (pedra.num1 == mesafim.num2 || pedra.num2 == mesafim.num2)){
+			return 1;
+		}			
+	}
+	if(m_ini == 3 || m_fim == 3){
+		if((pedra.num1 == mesaini.num1 || pedra.num1 == mesaini.num2 || pedra.num2 == mesaini.num1 || pedra.num2 == mesaini.num2 ) || (pedra.num1 == mesafim.num1 || pedra.num1 == mesafim.num2 || pedra.num2 == mesafim.num1 || pedra.num2 == mesafim.num2)){
+			return 1;
+		}			
+	}
+	return 0;	
+}
+
+void checa_pedras(tp_listade *maos, tp_listade *mesa, tp_pilha *cava, int turno){
+	int cond = 1;	
+	tp_no *atu;
+	tp_item m_ini, m_fim;	
+	tp_itemp mesaini, mesafim, e;
+	m_ini = mesa->ini->marcador;
+	m_fim = mesa->fim->marcador;
+	mesaini.num1 = mesa->ini->info.num1;
+	mesaini.num2 = mesa->ini->info.num2;
+	mesafim.num1 = mesa->fim->info.num1;
+	mesafim.num2 = mesa->fim->info.num2;	
+	atu = maos->ini;		
+	while(atu->marcador != turno){
+		atu=atu->prox;
+	}	
+	while(atu != NULL && atu->marcador == turno){
+		if(compara_pedras(m_ini, m_fim, mesaini, mesafim, atu->info)){
+			cond = 0;		
+			break;
+		}
+		atu=atu->prox;				
+	}	
+	while(cond == 1){
+		printf("Cavou\n");
+		pop(cava, &e);
+		insere_listade_ordenado(maos, e, turno);
+		if(compara_pedras(m_ini, m_fim, mesaini, mesafim, e))
+			cond = 0;				
+	}		
+}
+
+
+tp_no *busca_listade(tp_listade *lista, tp_itemp e){
 	tp_no *atu;
 	atu = lista->ini;
-	while((atu != NULL) && (atu->info != e)){
+	while((atu != NULL) && (atu->info.num1 != e.num1 && atu->info.num2 != e.num2)){
 		atu = atu->prox;		
 	}
 	return atu;
 }
 
-tp_listade *destroi_listade(tp_listade *lista){
+tp_listade *destroi_listade(tp_listade *lista, tp_itemp *e){
 	tp_no *atu;
 	atu = lista->ini;
 	while(atu != NULL){
+		*e=atu->info;
 		lista->ini = atu->prox;
 		free(atu);
 		atu=lista->ini;
