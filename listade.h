@@ -32,7 +32,7 @@ tp_listade *inicializa_listade(){
 }
 
 //Aloca um nó da lista
-tp_no *aloca() {
+tp_no *aloca_listade() {
 	tp_no* pt;
 	pt=(tp_no*) malloc(sizeof(tp_no));
 	return pt;
@@ -46,7 +46,7 @@ int listade_vazia(tp_listade *lista){
 //Função para inserir os elementos nas mãos dos jogadores de forma ordenada
 int insere_listade_ordenado(tp_listade *lista, tp_itemp e, tp_item m){	
 	tp_no *novo, *atu;	
-	novo=aloca();	
+	novo=aloca_listade();	
 	if(!novo) return 0;		
 	novo->info.num1 = e.num1;
 	novo->info.num2 = e.num2;
@@ -90,7 +90,7 @@ int insere_listade_ordenado(tp_listade *lista, tp_itemp e, tp_item m){
 
 int insere_listade_no_fim(tp_listade *lista, tp_itemp e, tp_item m){	
 	tp_no *novo;	
-	novo=aloca();	
+	novo=aloca_listade();	
 	if(!novo) return 0;		
 	novo->info.num1 = e.num1;
 	novo->info.num2 = e.num2;
@@ -111,7 +111,7 @@ int insere_listade_no_fim(tp_listade *lista, tp_itemp e, tp_item m){
 
 int insere_listade_no_inicio(tp_listade *lista, tp_itemp e, tp_item m){
 	tp_no *novo;
-	novo=aloca();
+	novo=aloca_listade();
 	if(!novo) return 0;
 	novo->info.num1 = e.num1;
 	novo->info.num2 = e.num2;

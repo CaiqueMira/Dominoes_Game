@@ -24,11 +24,11 @@ void jogo(tp_listade *maos, tp_listade *mesa, tp_pilha *cava, int jogadores){
 		}		
 		imprime_listade(mesa, NULL, 1, turno); //imprime a mesa no centro da tela (precisa definir as posições das pedras na tela na função imprime_listade
 		printf("\n");
-		imprime_pilha(*cava);
+		imprime_pilha(cava);
 		imprime_listade(maos, mesa, 2, turno);
 		checa_pedras(maos, mesa, cava, turno);			
 		printf("\n\n");
-		imprime_pilha(*cava);
+		imprime_pilha(cava);
 		imprime_listade(maos, mesa, 2, turno);
 		printf("Selecione qual pedra deseja jogar: \n");				
 		scanf("%d", &posicao);		
@@ -92,7 +92,7 @@ void distribui_maos(tp_listade *maos, tp_pilha *cava, int jogadores){
 	tp_itemp e;
 	tp_item m=1;	
 	while(jogadores > 0){		
-		pop(cava, &e);					
+		pop(cava, &e);							
 		insere_listade_ordenado(maos, e, m);				
 		cont++;
 		if(cont == 7){
@@ -133,30 +133,31 @@ void embaralha_pedras(pedra *vet){
 
 void empilha_cava(pedra *vet, tp_pilha *cava){	
 	int i=27;	
-	while(i >= 0){		
+	while(i >= 0){
+		printf("%d/%d\n", vet[i].num1, vet[i].num2);				
 		push(cava, vet[i]);
-		i--;				
+		i--;					
 	}
 }
 
 int main(){
 	setlocale(LC_ALL,"Portuguese");	
 	int cont=0, jogadores;
-	tp_pilha cava;
+	tp_pilha *cava;
 	tp_listade *maos, *mesa;
-	inicializa_pilha(&cava);
+	cava = inicializa_pilha();
 	maos = inicializa_listade();
 	mesa = inicializa_listade();	
 	pedra vet[28];		
-	cria_pedras(vet);	
-	empilha_cava(vet, &cava);
+	cria_pedras(vet);		
+	empilha_cava(vet, cava);
 	printf("Insira o número de jogadores: ");
 	scanf("%d", &jogadores);
 	system("cls");	
-	distribui_maos(maos, &cava, jogadores);
+	distribui_maos(maos, cava, jogadores);
 	imprime_listade(maos, NULL, 1, 0);	
 	printf("\n\n\n");
-	jogo(maos, mesa, &cava, jogadores);	
+	jogo(maos, mesa, cava, jogadores);	
 	imprime_listade(maos, NULL, 1, 0);
 	imprime_pilha(cava);	
 	return 0;
