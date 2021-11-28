@@ -5,7 +5,7 @@
 #define MAXTAM 40
 
 typedef struct{
-	int num1, num2;
+	int num1, num2, joga;	
 }pedra;
 
 typedef pedra

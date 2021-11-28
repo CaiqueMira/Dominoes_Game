@@ -4,10 +4,12 @@
 #include <locale.h>
 
 void jogo(tp_listade *maos, tp_listade *mesa, tp_pilha *cava, int jogadores){
-	int condicao=0, turno, posicao;
+	int condicao_parada=0, turno, posicao, lado;
+	tp_itemp pedra_atu;
 	tp_item m;
 	tp_itemp e;	
-	remove_listade(maos, &e, &m, 1, 2);
+	
+	remove_listade(maos, &e, &m, 1, NULL, 2);
 	turno = m;
 	turno++;
 	printf("Turno - %d\n", turno);
@@ -16,7 +18,7 @@ void jogo(tp_listade *maos, tp_listade *mesa, tp_pilha *cava, int jogadores){
 	else 
 		m = 3;	
 	insere_listade_no_fim(mesa, e, m);	
-	while(condicao == 0){
+	while(condicao_parada == 0){
 		if(turno > jogadores){
 			turno = 1;
 		}		
@@ -26,8 +28,52 @@ void jogo(tp_listade *maos, tp_listade *mesa, tp_pilha *cava, int jogadores){
 		imprime_listade(maos, mesa, 2, turno);
 		checa_pedras(maos, mesa, cava, turno);			
 		printf("\n\n");
-		imprime_pilha(*cava);		
-		scanf("%d", &posicao);
+		imprime_pilha(*cava);
+		imprime_listade(maos, mesa, 2, turno);
+		printf("Selecione qual pedra deseja jogar: \n");				
+		scanf("%d", &posicao);		
+		while(posicao >= tamanho_listade(maos, turno) || posicao < 0){			
+			printf("Posição inserida inválida, insira uma posição válida: \n");
+			scanf("%d", &posicao);
+		}
+		pedra_atu = busca_listade_posicao(maos, posicao-1, turno);
+		while(!compara_pedras(mesa->ini->marcador, mesa->fim->marcador, mesa->ini->info, mesa->fim->info, pedra_atu, 3, NULL)){
+			printf("%d/%d\n", pedra_atu.num1, pedra_atu.num2);
+			printf("A pedra escolhida não pode ser jogada, selecione outra: ");
+			scanf("%d", &posicao);
+			while(posicao >= tamanho_listade(maos, turno) || posicao < 0){
+			printf("%d\n", tamanho_listade(maos, turno));
+			printf("Posição inserida inválida, insira uma posição válida: \n");
+			scanf("%d", &posicao);
+			}
+			pedra_atu = busca_listade_posicao(maos, posicao-1, turno);		
+		}
+		remove_listade(maos, NULL, NULL, 0, turno, posicao-1);
+		printf("Selecione em qual extremidade deseja jogar a pedra (0 para esquerda, 1 para direita): \n");
+		printf("Para voltar insira 999: ");
+		scanf("%d", &lado);
+		while(lado != 0 && lado != 1){
+			printf("Insira um número válido: \n");
+			scanf("%d", &lado);
+		}								
+		while(!compara_pedras(mesa->ini->marcador, mesa->fim->marcador, mesa->ini->info, mesa->fim->info, pedra_atu, lado, &m)){
+			printf("A pedra não pode ser jogada na extremidade selecionada\n");
+			scanf("%d", &lado);
+			while(lado != 0 && lado != 1){
+			printf("Insira um número válido: \n");
+			scanf("%d", &lado);
+			}
+		}
+		switch(lado){
+			case 0:
+				insere_listade_no_inicio(mesa, pedra_atu, m);
+				break;
+			case 1:
+				insere_listade_no_fim(mesa, pedra_atu, m);
+				break;
+			default: printf("Erro, código invalido\n");
+		}
+		turno++;				
 		getchar();
 		//scanf("%d", &posicao);
 		//remove_listade(maos, &e, &m, 0, posicao-1);
