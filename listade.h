@@ -89,7 +89,7 @@ int listade_vazia(tp_listade *lista){
 	return 0;
 }
 
-//Função para inserir os elementos nas mãos dos jogadores de forma ordenada. Ela recebe como parâmetro a lista, a struct da pedra e a variável m que funciona como um marcador para indicar de qual jogador é essa pedra
+// Função para inserir os elementos nas mãos dos jogadores de forma ordenada. Ela recebe como parâmetro a lista, a struct da pedra e a variável m que funciona como um marcador para indicar de qual jogador é essa pedra
 int insere_listade_ordenado(tp_listade *lista, tp_itemp e, tp_item m){	
 	tp_no *novo, *atu;	
 	novo=aloca_listade();	
@@ -579,7 +579,7 @@ void imprime_listade(tp_listade *lista, tp_listade *lista2, int ordem, int turno
 					// condicao_tela = 2, a lista será printada de forma inversa da direita para esquerda
 					if(condicao_tela == 2){
 						// Confere se o elemento anterior ao que está sendo printado é uma bucha e se o local a ser printado está fora do range de transição da adaptação da tela
-						if(atu->ant->marcador == 0 && x < 77)							
+						if(atu->ant->marcador == 0 && x < 74)							
 							y += 1;											
 						x -= 9;						
 						orientacao = 1;	
@@ -671,6 +671,13 @@ void imprime_listade(tp_listade *lista, tp_listade *lista2, int ordem, int turno
 				cont++;
 			}
 			textcolor(15);
+			break;
+		case 3: atu = lista->ini;
+			posicao(0, 60);
+			while(atu != NULL){				
+				printf("|%d - %d/%d| ", atu->marcador, atu->info.num1, atu->info.num2);
+				atu = atu->prox;
+			}
 			break;		
 		default : printf("codigo invalido");
 	}

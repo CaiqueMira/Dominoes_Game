@@ -102,6 +102,8 @@ void printa_tela(int tela, char nome1[1], char nome2[1], char nome3[1], char nom
 			// Imprime a mão do jogador atual com as posições das pedras para que o jogador possa selecionar
 			imprime_listade(maos, mesa, 2, turno);
 			
+			imprime_listade(mesa, NULL, 3, NULL);
+			
 			// Imprime o turno atual de quem está jogando			
 			switch(turno){
 				case 1:
