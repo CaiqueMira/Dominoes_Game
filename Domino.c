@@ -603,6 +603,7 @@ int main(){
 		if(condicao == 1){
 			maos = destroi_listade(maos, &e);
 			mesa = destroi_listade(mesa, &e);
+			
 			destroi_pilha(cava);
 			i = 1;			
 		}	

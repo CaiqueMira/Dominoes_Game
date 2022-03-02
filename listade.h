@@ -400,7 +400,7 @@ int tamanho_listade(tp_listade *lista, int turno){
 // Função responsável por printar as listas das mãos e da mesa em tela
 // Recebe como parâmetro as duas listas, a ordem (caso a ser impresso) e o turno do jogador
 void imprime_listade(tp_listade *lista, tp_listade *lista2, int ordem, int turno){
-	int cont=1, cond = 0, condicao_tela = 0, x, y, orientacao = 0;
+	int cont=1, cond = 0, condicao_tela = 0, x, y, orientacao = 0, inverte = 0;
 	tp_itemp mesaini, mesafim;
 	tp_item m_ini, m_fim;	
 	tp_no *atu;	
@@ -672,10 +672,27 @@ void imprime_listade(tp_listade *lista, tp_listade *lista2, int ordem, int turno
 			}
 			textcolor(15);
 			break;
-		case 3: atu = lista->ini;
+		// Printa a mesa de forma linear
+		case 3: atu = lista->ini;			
 			posicao(0, 60);
-			while(atu != NULL){				
-				printf("|%d - %d/%d| ", atu->marcador, atu->info.num1, atu->info.num2);
+			while(atu != NULL){
+				if(inverte == 0){
+					if(atu->marcador == 0 || atu->marcador == 1)										
+						printf("|%d/%d|", atu->info.num1, atu->info.num2);
+					else
+						printf("|%d/%d|", atu->info.num2, atu->info.num1);
+				}
+				else{
+					if(atu->marcador == 0 || atu->marcador == 1)										
+						printf("|%d/%d|", atu->info.num2, atu->info.num1);
+					else
+						printf("|%d/%d|", atu->info.num1, atu->info.num2);					
+				}
+				if(atu == lista->meio){
+					inverte = 1;
+				}
+				// Printa qual número está livre (na extremidade) da peça e os seus números			
+				//printf("%d-|%d/%d| ", atu->marcador, atu->info.num1, atu->info.num2);			
 				atu = atu->prox;
 			}
 			break;		
