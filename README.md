@@ -18,14 +18,14 @@ To be able to run the code you need to install the library conio.c. Follow the t
 ## Demonstrações de funcionamento / Operations demonstration
 - **Tela inicial / Initial screen**
 
-![Tela_inicial]("Images/Tela Inicial.png")
+![Tela_inicial]("/Images/Tela Inicial.png")
 
 - **Tela da mesa e das mãos / Table and hands screen**
 
-![Tela_da_mesa](Images/Tela da mesa.png)
+![Tela_da_mesa](/Images/Tela da mesa.png)
 
-![tela_das_mãos](Images/Tela da mão.png)
+![tela_das_mãos](/Images/Tela da mão.png)
 
 - **Tela final / Final screen**
 
-![Tela_final](Images/Tela final.png)
+![Tela_final](/Images/Tela final.png)
