@@ -4,9 +4,9 @@
 **Dominoes game developed in C language in which it is possible to play from 2 to 4 players**
 
 ## Instruções para executar / Instructions to execute 
-Para conseguir executar o código é necessário instalar a biblioteca conio.c. Seguir o tutorial do arquivo [Conio.c - Como instalar.txt]("Conio.c library"/"Conio.c_Como instalar.txt") 
+Para conseguir executar o código é necessário instalar a biblioteca conio.c. Seguir o tutorial do arquivo [Conio.c - Como instalar.txt](Conio.c-library/Conio.c_Como_Instalar.txt) 
 
-To be able to run the code you need to install the library conio.c. Follow the tutorial file [Conio.c - Como instalar.txt](Conio.c library/Conio.c - Como instalar.txt)
+To be able to run the code you need to install the library conio.c. Follow the tutorial file [Conio.c - Como instalar.txt](Conio.c-library/Conio.c_Como_Instalar.txt)
 
 ## Arquivos / Files
 - **Domino.c**: Código onde estão todas as lógicas do jogo e as principais funções utilizadas para o funcionamento da lógica / Code where are all the logics of the game and the main functions used for the operation of the logic 
